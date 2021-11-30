@@ -21,7 +21,7 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
 $app = AppFactory::create();
-$app->setBasePath('/TPLabo3-LaComanda/public');
+$app->setBasePath('/public');
 $app->addRoutingMiddleware();
 
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
