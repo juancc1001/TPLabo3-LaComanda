@@ -6,15 +6,15 @@ class Usuario
     public $usuario;
     public $clave;
     public $fecha_alta;
+    public $id_sector;
 
     public function crearUsuario($id_sector)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
         $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO usuarios (id_sector, nombre, clave, fecha_alta) VALUES (:id_sector, :usuario, :clave, :fecha_alta)");
-        $claveHash = password_hash($this->clave, PASSWORD_DEFAULT);
         $consulta->bindValue(':id_sector', strval($id_sector));
         $consulta->bindValue(':usuario', $this->usuario, PDO::PARAM_STR);
-        $consulta->bindValue(':clave', $claveHash);
+        $consulta->bindValue(':clave', $this->clave);
         $consulta->bindValue(':fecha_alta', $this->fecha_alta);
         $consulta->execute();
 
@@ -24,7 +24,7 @@ class Usuario
     public static function obtenerTodos()
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT usuarios.id, usuarios.nombre usuario, usuarios.clave, usuarios.fecha_alta, sectores.nombre_sector FROM usuarios inner join sectores on usuarios.id_sector = sectores.id");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT usuarios.id, usuarios.nombre usuario, usuarios.clave, usuarios.fecha_alta, usuarios.id_sector, sectores.nombre_sector FROM usuarios inner join sectores on usuarios.id_sector = sectores.id");
         $consulta->execute();
 
         return $consulta->fetchAll(PDO::FETCH_CLASS, 'Usuario');
@@ -33,8 +33,19 @@ class Usuario
     public static function obtenerUsuario($id_usuario)
     {
         $objAccesoDatos = AccesoDatos::obtenerInstancia();
-        $consulta = $objAccesoDatos->prepararConsulta("SELECT usuarios.id, usuarios.nombre usuario, usuarios.clave, usuarios.fecha_alta, sectores.nombre_sector FROM usuarios inner join sectores on usuarios.id_sector = sectores.id WHERE usuarios.id = :id");
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT usuarios.id, usuarios.nombre usuario, usuarios.clave, usuarios.fecha_alta, usuarios.id_sector, sectores.nombre_sector FROM usuarios inner join sectores on usuarios.id_sector = sectores.id WHERE usuarios.id = :id");
         $consulta->bindValue(':id', $id_usuario, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $consulta->fetchObject('Usuario');
+    }
+
+    public static function obtenerUsuarioNombreClave($nombre, $clave)
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT usuarios.id, usuarios.nombre usuario, usuarios.clave, usuarios.fecha_alta, usuarios.id_sector, sectores.nombre_sector FROM usuarios inner join sectores on usuarios.id_sector = sectores.id WHERE usuarios.nombre = :nombre and usuarios.clave = :clave");
+        $consulta->bindValue(':nombre', $nombre, PDO::PARAM_STR);
+        $consulta->bindValue(':clave', $clave, PDO::PARAM_STR);
         $consulta->execute();
 
         return $consulta->fetchObject('Usuario');

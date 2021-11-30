@@ -4,8 +4,29 @@ require_once './interfaces/IApiUsable.php';
 
 class ProductoController extends Producto implements IApiUsable
 {
-	  public function CargarUno($request, $response, $args){}
 	  public function ModificarUno($request, $response, $args){}
+
+    public function CargarUno($request, $response, $args)
+    {
+        $parametros = $request->getParsedBody();
+
+        $id_sector = $parametros['id_sector'];
+        $nombre = $parametros['nombre'];
+        $precio = $parametros['precio'];
+        $tipo = $parametros['tipo'];
+
+        $producto = new Producto();
+        $producto->nombre = $nombre;
+        $producto->precio = $precio;
+        $producto->tipo = $tipo;
+        $id = $producto->crearProducto($id_sector);
+
+        $payload = json_encode(array("mensaje" => "Producto creado con exito. Id: ".$id));
+
+        $response->getBody()->write($payload);
+        return $response
+          ->withHeader('Content-Type', 'application/json');
+    }
 
     public function TraerTodos($request, $response, $args)
     {
@@ -37,8 +58,13 @@ class ProductoController extends Producto implements IApiUsable
     {
         $id_producto = $args['id'];
         $producto = Producto::obtenerProducto($id_producto);
-        $payload = json_encode($producto);
-
+        if ($producto == "false")
+        {
+          $payload = json_encode($producto);
+        }else{
+          $payload = json_encode(array("mensaje"=>"producto no encontrado"));
+        }
+        
         $response->getBody()->write($payload);
         return $response
           ->withHeader('Content-Type', 'application/json');

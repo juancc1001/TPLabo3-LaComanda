@@ -1,4 +1,6 @@
 <?php
+use Psr\Http\Message\UploadedFileInterface;
+
 require_once './models/Mesa.php';
 require_once './interfaces/IApiUsable.php';
 
@@ -16,6 +18,29 @@ class MesaController extends Mesa //implements IApiUsable
         return $response
           ->withHeader('Content-Type', 'application/json');
     }
+
+    public function CargarFoto($request, $response, $args)
+    {
+        $uploadedFiles = $request->getUploadedFiles();
+        $uploadedFile = $uploadedFiles['foto'];
+
+        if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            $filename = MesaController::moveUploadedFile(__DIR__.'\fotos_mesas', $uploadedFile, $args['codigo']);
+            $response->getBody()->write('Uploaded: ' . $filename . '<br/>');
+        }
+
+        return $response
+          ->withHeader('Content-Type', 'application/json');
+    }
+
+    public static function moveUploadedFile(string $directory, UploadedFileInterface $uploadedFile, string $codigoMesa)
+{
+    $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+    $filename =  $codigoMesa.".".$extension;
+
+    $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+    return $filename;
+}
 
     public function TraerTodos($request, $response, $args)
     {
