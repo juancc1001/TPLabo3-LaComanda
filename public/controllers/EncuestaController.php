@@ -43,4 +43,14 @@ class EncuestaController extends Encuesta //implements IApiUsable
           ->withHeader('Content-Type', 'application/json');
     }
 
+    public function Mejores($request, $response, $args)
+    {
+        $lista = Encuesta::obtenerMejoresPuntajes();
+        $payload = json_encode(array("lista opiniones" => $lista));
+
+        $response->getBody()->write($payload);
+        return $response
+          ->withHeader('Content-Type', 'application/json');
+    }
+
 }

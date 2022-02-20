@@ -58,11 +58,11 @@ class ProductoController extends Producto implements IApiUsable
     {
         $id_producto = $args['id'];
         $producto = Producto::obtenerProducto($id_producto);
-        if ($producto == "false")
+        if ($producto == false)
         {
-          $payload = json_encode($producto);
-        }else{
           $payload = json_encode(array("mensaje"=>"producto no encontrado"));
+        }else{
+          $payload = json_encode($producto);
         }
         
         $response->getBody()->write($payload);

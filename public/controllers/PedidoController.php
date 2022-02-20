@@ -116,7 +116,7 @@ class PedidoController extends Pedido //implements IApiUsable
     public function Preparar($request, $response, $args)
     {
         $codigo_pedido = $args['codigo'];
-        if (isset($args['codigo']))
+        if (isset($args['demora']))
         {
             $demora = $args['demora'];
         }else
@@ -141,7 +141,7 @@ class PedidoController extends Pedido //implements IApiUsable
     public function Servir($request, $response, $args)
     {
         $codigo_pedido = $args['codigo'];
-        if (isset($args['codigo']))
+        if (isset($args['demora']))
         {
             $demora = $args['demora'];
         }else

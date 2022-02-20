@@ -2,7 +2,6 @@
 
 class Encuesta
 {
-    public $id_mesa;
     public $puntaje_mesa;
     public $puntaje_restaurante;
     public $puntaje_mozo;
@@ -24,5 +23,13 @@ class Encuesta
         return $objAccesoDatos->obtenerUltimoId();
     }
 
+    public static function obtenerMejoresPuntajes()
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT puntaje_mesa, puntaje_restaurante, puntaje_mozo, puntaje_cocinero, texto FROM encuestas ORDER BY puntaje_restaurante DESC");
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Encuesta');
+    }
 
 }

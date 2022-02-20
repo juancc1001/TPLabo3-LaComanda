@@ -1,5 +1,5 @@
 <?php
-
+require_once "Pedido.php";
 class Mesa
 {   
     public $id;
@@ -34,6 +34,15 @@ class Mesa
         $consulta->execute();
 
         return $consulta->fetchObject('Mesa');
+    }
+
+    public static function obtenerMasUsada()
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta('SELECT * FROM pedidos GROUP BY id_mesa ORDER BY COUNT(*) DESC LIMIT 1');
+        $consulta->execute();
+
+        return $consulta->fetchObject('Pedido');
     }
 
     public static function update($codigo, $estado)

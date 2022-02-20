@@ -69,6 +69,7 @@ $app->group('/mesas', function (RouteCollectorProxy $group){
   $group->delete('/{codigo}', \MesaController::class . ':BorrarUno')
     ->add(\Verificadora::class . ':VerificarSocio');
   $group->post('/foto/{codigo}', \MesaController::class . ':CargarFoto');
+  $group->get('/consultas/masusada', \MesaController::class . ':MasUsada');
 });
 
 $app->group('/pedidos', function (RouteCollectorProxy $group){
@@ -95,6 +96,11 @@ $app->group('/pedidos', function (RouteCollectorProxy $group){
 $app->group('/encuestas', function (RouteCollectorProxy $group){
   $group->post('[/]', \EncuestaController::class . ':CargarUno');
 
+});
+
+$app->group('/consultas', function (RouteCollectorProxy $group){
+  $group->get('/mesamasusada', \MesaController::class . ':MasUsada');
+  $group->get('/mejorespuntajes', \EncuestaController::class . ':Mejores');
 });
 
 // Run app

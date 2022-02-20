@@ -79,7 +79,6 @@ class Verificadora
             $token = trim(explode("Bearer", $header)[1]);
             try {
                 $data = TokenController::ObtenerData($token);
-
                 if ($data->id_sector == "6")
                 {
                     $request = $request->withAttribute("id_usuario", $data->id);

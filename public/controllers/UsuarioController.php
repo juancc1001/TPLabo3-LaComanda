@@ -108,7 +108,7 @@ class UsuarioController extends Usuario implements IApiUsable
           
             $objeto = Usuario::obtenerUsuarioNombreClave($nombre, $clave);
 
-            if ($objeto == "false")
+            if ($objeto == false)
             {
                 $data = array("mensaje" => "ERROR: Usuario o clave incorrectos.");
                 $status = 403;
